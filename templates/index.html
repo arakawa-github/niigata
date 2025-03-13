@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel アップロード</title>
+    <title>Word アップロード</title>
 </head>
 <body>
     <h1>Word ファイルをアップロード</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx, .xls">
+        <input type="file" name="file" accept=".docx">
         <button type="submit">アップロード</button>
     </form>
 	{% if filename %}
