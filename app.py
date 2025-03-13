@@ -16,7 +16,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # 許可する拡張子
 ALLOWED_EXTENSIONS = {"docx"}
 
-def wordFunc(doc_path_):
+def wordFunc(doc_path):
     # Wordファイルを開く
     #doc_path = "ピッキングリスト.docx"
     doc = Document(doc_path)
