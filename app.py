@@ -80,11 +80,10 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         ##
-        Docdata = wordFunc(file_path)
-        ShareFunc()
-        
-        ##
         file.save(file_path)
+        ##
+        Docdata = wordFunc(file_path)
+        ##
         return render_template("index.html", filename=filename)  # ファイル名を渡す
     
     return "許可されていないファイル形式です", 400
