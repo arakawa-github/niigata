@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel アップロード</title>
+</head>
+<body>
+    <h1>Excel ファイルをアップロード</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx, .xls">
+        <button type="submit">アップロード</button>
+    </form>
+	{% if filename %}
+        <p>ファイルがアップロードされました！</p>
+        <a href="/download/{{ filename }}" id="downloadLink">ダウンロード</a>
+        <script>
+            document.getElementById("downloadLink").click(); // 自動ダウンロード
+        </script>
+    {% endif %}
+</body>
+</html>
+
