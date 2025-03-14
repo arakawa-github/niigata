@@ -12,7 +12,9 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
+DOWNLOAD_FOLDER = "download"
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+app.config["DOWNLOAD_FOLDER"] = DOWNLOAD_FOLDER
 # 許可する拡張子
 ALLOWED_EXTENSIONS = {"docx"}
 
@@ -57,8 +59,31 @@ def wordFunc(doc_path):
                         data.append([current_serial_number] + row)
 
             except StopIteration:
-               pass  # 表がもうない場合はスキップ 
-    return data               
+               pass  # 表がもうない場合はスキップ
+
+
+
+
+    # DataFrameを作成（最初の列は「連番」、残りは表のデータ）
+    df = pd.DataFrame(data)
+
+    # 4列目（インデックス3）、9列目（インデックス8）、10列目（インデックス9）、11列目（インデックス10）を削除
+    df = df.drop(df.columns[[3, 7, 8, 9, 10]], axis=1)
+
+    # 列名を設定
+    df.columns = ["連番", "棚番", "品目コード", "指示数", "納入日", "品名"]
+    #
+    # 新しい列を追加（空の値で初期化）
+    df["済み"] = ""
+    df["担当者"] = ""
+    df["ピッキング日"] = ""
+    df["ID_XX"] = ""
+    # Excelファイルに保存
+    downloadName="ピッキングリスト.xlsx"
+    df.to_excel("download/ピッキングリスト.xlsx", index=False)
+    print("変換完了！")               
+    
+    return  downloadName               
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -82,15 +107,16 @@ def upload_file():
         ##
         file.save(file_path)
         ##
-        Docdata = wordFunc(file_path)
+        downloadName = wordFunc(file_path)
+        #print(downloadName)
         ##
-        return render_template("index.html", filename=filename)  # ファイル名を渡す
+        return render_template("index.html", filename=downloadName)  # ファイル名を渡す
     
     return "許可されていないファイル形式です", 400
     
 @app.route("/download/<filename>")
 def download_file(filename):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], filename, as_attachment=True)
+    return send_from_directory(app.config["DOWNLOAD_FOLDER"], filename, as_attachment=True)
     
 if __name__ == "__main__":
     app.run(debug=True)
